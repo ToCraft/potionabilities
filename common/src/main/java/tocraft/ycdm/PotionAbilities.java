@@ -7,21 +7,13 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mojang.datafixers.util.Pair;
-
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.events.common.PlayerEvents;
+import tocraft.craftedcore.platform.Platform;
 import tocraft.ycdm.config.PotionAbilitiesConfig;
+import tocraft.ycdm.network.NetworkHandler;
 
 public class PotionAbilities {
 
@@ -36,33 +28,18 @@ public class PotionAbilities {
 	}
 
 	public void initialize() {
-		PlayerEvents.PLAYER_JOIN.register(player -> {
-			
-			Registry<Structure> registry = player.serverLevel().registryAccess().registryOrThrow(Registries.STRUCTURE);
-			
-			Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation("jungle_pyramid")));
-			
-			HolderSet<Structure> holderSet = getStructureHolders(structure, registry).orElseThrow();
-			ServerLevel serverLevel = player.serverLevel();
-			
-			BlockPos nearest = serverLevel.getChunkSource().getGenerator().findNearestMapStructure(serverLevel, holderSet, player.blockPosition(), 100, false).getFirst();
-			
-			if (nearest != null) {
-				LOGGER.warn(nearest.toString());
-				
-				// get distance from player to structure. Ignores the height.
-				int distance = player.blockPosition().distManhattan(new BlockPos(nearest.getX(), player.getBlockY(), nearest.getZ()));
-				LOGGER.info("distance: " + distance);
-			}
-		});
+		if (Platform.getDist().isClient())
+			new PotionAbilitiesClient().initialize();
+		
+		NetworkHandler.registerPacketReceiver();
 	}
 
 	public static ResourceLocation id(String name) {
 		return new ResourceLocation(MODID, name);
 	}
 	
-	private static Optional<? extends HolderSet.ListBacked<Structure>> getStructureHolders(Structure structure, Registry<Structure> structureRegistry) {
-		return structureRegistry.getHolder(structureRegistry.getId(structure)).map((holder) -> {
+	public static <S extends Object> Optional<? extends HolderSet.ListBacked<S>> getHolders(S element, Registry<S> registry) {
+		return registry.getHolder(registry.getId(element)).map((holder) -> {
 				return HolderSet.direct(holder);
 				});
 	}

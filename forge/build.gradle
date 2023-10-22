@@ -9,6 +9,12 @@ architectury {
     forge()
 }
 
+loom {
+    forge {
+        mixinConfigs = [ "ycdm.mixins.json" ]
+    }
+}
+
 configurations {
     common
     shadowCommon
