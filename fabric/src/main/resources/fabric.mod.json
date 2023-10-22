@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "ycdm",
+  "version": "${version}",
+  "name": "Potion Abilities",
+  "description": "Play as your favorite entities!",
+  "authors": [
+    "To_Craft"
+  ],
+  "contributors": [
+  ],
+  "license": "",
+  "icon": "",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "tocraft.ycdm.fabric.PotionAbilitiesFabric"
+    ],
+    "client": [
+    ]
+  },
+  "mixins": [
+  ],
+  "depends": {
+    "fabricloader": ">=0.8.7+build.201",
+    "fabric": "*",
+    "fabric-api": "*",
+    "craftedcore": "*"
+  }
+}
