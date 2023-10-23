@@ -35,6 +35,10 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 	private Integer potion = 0;
 	@Unique
 	private List<BlockPos> structures = new ArrayList<BlockPos>();
+	
+	// Stuff for giving potions
+	private int distance = PotionAbilities.CONFIG.maxDistanceToStructure;
+	private BlockPos nearest = null;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> type, Level world) {
         super(type, world);
@@ -44,30 +48,48 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     private void serverTick(CallbackInfo info) {
     	// check if player is near temple and in liquid.
     	if ((Object) this instanceof ServerPlayer serverPlayer && serverPlayer.isInLiquid()) {
-    		
         	ServerLevel serverLevel = serverPlayer.serverLevel();
-    		
     		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
-    		Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation("jungle_pyramid")));
-    		HolderSet<Structure> holderSet = PotionAbilities.getHolders(structure, registry).orElseThrow();
-    		BlockPos nearest = serverLevel.getChunkSource().getGenerator().findNearestMapStructure(serverLevel, holderSet, serverPlayer.blockPosition(), 100, false).getFirst();
+    		
+    		// get each structure from config
+    		PotionAbilities.CONFIG.structures.forEach(entry -> {
+    			try {
+    				Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(entry)));
+            		HolderSet<Structure> holderSet = PotionAbilities.getHolders(structure, registry).orElseThrow();
+            		BlockPos newNearest = serverLevel.getChunkSource().getGenerator().findNearestMapStructure(serverLevel, holderSet, serverPlayer.blockPosition(), PotionAbilities.CONFIG.maxDistanceToStructure, false).getFirst();
+        			int newDistance = serverPlayer.blockPosition().distManhattan(new BlockPos(newNearest.getX(), serverPlayer.getBlockY(), newNearest.getZ()));
+            		if (newDistance <= distance) {
+            			distance = newDistance;
+            			nearest = newNearest;
+            		}
+	    		}
+				// ignore crashes to save time (otherwise it would need to check EVERY var from the code above if it's null.
+	    		catch (Exception ignored) {
+	    			// Re-assign values to ensure it works next time
+	    			nearest = null;
+	    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
+	    		}; 			
+    		});
+
     		if (nearest != null) {
-    			// check if structure was already visited    			
+    			// check if structure was already visited
     			for (BlockPos entry : structures) {
     				if (entry.getX() == nearest.getX() && entry.getZ() == nearest.getZ()) {
+    					// Re-assign values to ensure it works next time
+    					nearest = null;
+    					distance = PotionAbilities.CONFIG.maxDistanceToStructure;
     					return;
     				}
     			}
-    			
-    			int distance = serverPlayer.blockPosition().distManhattan(new BlockPos(nearest.getX(), serverPlayer.getBlockY(), nearest.getZ()));
-    			if (distance <= 50) {    				
-    				PotionAbilities.LOGGER.warn("potion: " + potion);
-    				
-    				Random random = new Random();
-					potion = random.nextInt(0, BuiltInRegistries.POTION.size());
-					structures.add(nearest);
-    			}
-    		}
+    			    				
+				Random random = new Random();
+				potion = random.nextInt(0, BuiltInRegistries.POTION.size());
+				structures.add(nearest);
+			}
+    		
+    		// Re-assign values to ensure it works next time
+			nearest = null;
+			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
     	}
     }
     
