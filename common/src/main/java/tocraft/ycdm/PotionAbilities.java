@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.config.ConfigLoader;
+import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
+import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.ycdm.config.PotionAbilitiesConfig;
 import tocraft.ycdm.network.NetworkHandler;
@@ -21,7 +24,7 @@ public class PotionAbilities {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(PotionAbilities.class);
 	public static final String MODID = "ycdm";
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/arch-1.20.1/gradle.properties";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/1.20.2/gradle.properties";
 	public static final PotionAbilitiesConfig CONFIG = ConfigLoader.read(MODID, PotionAbilitiesConfig.class);
 	public static boolean foundWalkers = false;
 	public static List<String> devs = new ArrayList<>();
@@ -33,8 +36,14 @@ public class PotionAbilities {
 		Platform.getMods().forEach(mod -> {
 			if (mod.getModId().equals("walkers"))
 				foundWalkers = true;
-				
 		});
+		
+		PlayerEvents.PLAYER_JOIN.register(player -> {
+			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
+			if (newestVersion != null && !Platform.getMod(MODID).getVersion().equals(newestVersion))
+				player.sendSystemMessage(Component.translatable("ycdm.update", newestVersion));
+		});
+			
 		
 		if (Platform.getDist().isClient())
 			new PotionAbilitiesClient().initialize();
