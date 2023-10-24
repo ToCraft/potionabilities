@@ -1,3 +1,5 @@
 {
-  "ycdm.update": "A new version of Potion-Abilities is available: %s"
+	"key.categories.ycdm": "Potion Abilities",
+	"key.ycdm_ability": "Potion Ability",
+	"ycdm.update": "A new version of Potion-Abilities is available: %s"
 }

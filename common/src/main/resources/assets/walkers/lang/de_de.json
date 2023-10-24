@@ -1,3 +1,5 @@
 {
-  "ycdm.update": "Eine neue Version von Potion-Abilities ist verfügbar: %s"
+	"key.categories.ycdm": "Zauber-Fähigkeiten",
+	"key.ycdm_ability": "Zauber-Fähigkeit",
+	"ycdm.update": "Eine neue Version von Potion-Abilities ist verfügbar: %s"
 }
