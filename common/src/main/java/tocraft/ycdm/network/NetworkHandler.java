@@ -19,6 +19,8 @@ public class NetworkHandler {
 	
 	public static void registerPacketReceiver() {
 		NetworkManager.registerReceiver(NetworkManager.Side.C2S, ABILITY_USE, (buf, context) -> {
+			if (!PotionAbilities.shapeConditions(context.getPlayer()))
+				return;
 			UUID entityUUID = buf.readUUID();
 			LivingEntity sendEntity = (LivingEntity) ((ServerPlayer)context.getPlayer()).serverLevel().getEntity(entityUUID);
 			

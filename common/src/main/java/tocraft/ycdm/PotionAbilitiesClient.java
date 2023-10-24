@@ -14,8 +14,9 @@ public class PotionAbilitiesClient {
 			GLFW.GLFW_KEY_R, "key.categories.ycdm");
 	
 	public void initialize() {
-		KeyMappingRegistry.register(ABILITY_KEY);
-
+		if (!PotionAbilities.foundWalkers)
+			KeyMappingRegistry.register(ABILITY_KEY);
+		
 		// Register event handlers
 		ClientTickEvents.CLIENT_PRE.register(new KeyPressHandler());
 	}

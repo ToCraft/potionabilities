@@ -47,7 +47,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     @Inject(method = "tick", at = @At("HEAD"))
     private void serverTick(CallbackInfo info) {
     	// check if player is near temple and in liquid.
-    	if ((Object) this instanceof ServerPlayer serverPlayer && serverPlayer.isInLiquid()) {
+    	if ((Object) this instanceof ServerPlayer serverPlayer && serverPlayer.isInLiquid() && PotionAbilities.shapeConditions(serverPlayer)) {
         	ServerLevel serverLevel = serverPlayer.serverLevel();
     		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
     		
@@ -81,7 +81,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     					return;
     				}
     			}
-    			    				
+    			
 				Random random = new Random();
 				potion = random.nextInt(0, BuiltInRegistries.POTION.size());
 				structures.add(nearest);
@@ -92,8 +92,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
     	}
     }
-    
-    @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
+
+	@Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
 	private void readNbt(CompoundTag tag, CallbackInfo info) {
     	readData(tag.getCompound(PotionAbilities.MODID));
 	}

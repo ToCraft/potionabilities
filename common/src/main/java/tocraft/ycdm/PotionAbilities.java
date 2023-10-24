@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.config.ConfigLoader;
 import tocraft.craftedcore.platform.Platform;
+import tocraft.walkers.impl.PlayerDataProvider;
 import tocraft.ycdm.config.PotionAbilitiesConfig;
 import tocraft.ycdm.network.NetworkHandler;
 
@@ -21,13 +23,19 @@ public class PotionAbilities {
 	public static final String MODID = "ycdm";
 	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/arch-1.20.1/gradle.properties";
 	public static final PotionAbilitiesConfig CONFIG = ConfigLoader.read(MODID, PotionAbilitiesConfig.class);
+	public static boolean foundWalkers = false;
 	public static List<String> devs = new ArrayList<>();
-
 	static {
 		devs.add("1f63e38e-4059-4a4f-b7c4-0fac4a48e744");
 	}
-
+	
 	public void initialize() {
+		Platform.getMods().forEach(mod -> {
+			if (mod.getModId().equals("walkers"))
+				foundWalkers = true;
+				
+		});
+		
 		if (Platform.getDist().isClient())
 			new PotionAbilitiesClient().initialize();
 		
@@ -43,4 +51,14 @@ public class PotionAbilities {
 				return HolderSet.direct(holder);
 				});
 	}
+	
+	/**
+     * 
+     * @return True, if woodwalkers isn't installed or if the player's got a second shape but is in first shape
+     */
+    public static boolean shapeConditions(Player player) {
+    	if (foundWalkers)
+    		return ((PlayerDataProvider) player).get2ndShape() != null && ((PlayerDataProvider) player).getCurrentShape() == null;
+    	return true;
+    };
 }
