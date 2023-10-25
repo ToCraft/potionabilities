@@ -1,5 +1,9 @@
 {
 	"key.categories.ycdm": "Potion Abilities",
 	"key.ycdm_ability": "Potion Ability",
+	"ycdm.structure_clear": "%s forgot the visited structures.",
+	"ycdm.potion_clear": "%s lost a potion ability.",
+	"ycdm.potion_get_success": "%s learned the potion ability %s.",
+	"ycdm.potion_get_failed": "%s doesn't have a potion ability unlocked.",
 	"ycdm.update": "A new version of Potion-Abilities is available: %s"
 }

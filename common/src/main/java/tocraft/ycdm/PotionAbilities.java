@@ -17,6 +17,7 @@ import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.impl.PlayerDataProvider;
+import tocraft.ycdm.command.PACommand;
 import tocraft.ycdm.config.PotionAbilitiesConfig;
 import tocraft.ycdm.network.NetworkHandler;
 
@@ -49,6 +50,7 @@ public class PotionAbilities {
 			new PotionAbilitiesClient().initialize();
 		
 		NetworkHandler.registerPacketReceiver();
+		new PACommand().initialize();
 	}
 
 	public static ResourceLocation id(String name) {
