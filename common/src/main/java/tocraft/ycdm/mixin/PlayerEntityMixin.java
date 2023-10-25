@@ -34,7 +34,7 @@ import tocraft.ycdm.impl.PAPlayerDataProvider;
 @Mixin(Player.class)
 public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayerDataProvider {
 	@Unique
-	private Integer potion = 0;
+	private String potion = "";
 	@Unique
 	private List<BlockPos> structures = new ArrayList<BlockPos>();
 	
@@ -85,7 +85,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     			}
     			
 				Random random = new Random();
-				potion = random.nextInt(0, BuiltInRegistries.POTION.size());
+				int potionId = random.nextInt(0, BuiltInRegistries.POTION.size());
+				ResourceLocation potionName = BuiltInRegistries.POTION.getKey(BuiltInRegistries.POTION.byId(potionId));
+				potion = potionName.getNamespace() + ":" + potionName.getPath();
 				structures.add(nearest);
 				
 				serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
@@ -110,7 +112,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 	
 	@Unique
 	private CompoundTag writeData(CompoundTag tag) {
-		tag.putInt("potion",  potion);
+		tag.putString("potion",  potion);
 		ListTag list = new ListTag();
 		structures.forEach(entry -> {
 			CompoundTag entryTag = new CompoundTag();
@@ -126,7 +128,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 	@Unique
 	public void readData(CompoundTag tag) {
 		structures.clear();
-		potion = tag.getInt("id");
+		potion = tag.getString("potion");
 		if ((ListTag) tag.get("structures") != null) {
 			ListTag list = (ListTag) tag.get("structures");
 			list.forEach(entry -> {
@@ -142,13 +144,13 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 	
 	@Unique
 	@Override
-	public void setPotion(Integer potion) {
+	public void setPotion(String potion) {
 		this.potion = potion;
 	};
 	
 	@Unique
 	@Override
-	public Integer getPotion() {
+	public String getPotion() {
 		return potion;
 	};
 	

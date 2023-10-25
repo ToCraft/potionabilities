@@ -24,8 +24,8 @@ public class NetworkHandler {
 			UUID entityUUID = buf.readUUID();
 			LivingEntity sendEntity = (LivingEntity) ((ServerPlayer)context.getPlayer()).serverLevel().getEntity(entityUUID);
 			
-			int potionId = ((PAPlayerDataProvider)context.getPlayer()).getPotion();
-			Potion potion = BuiltInRegistries.POTION.byId(potionId);
+			String potionId = ((PAPlayerDataProvider)context.getPlayer()).getPotion();
+			Potion potion = BuiltInRegistries.POTION.get(new ResourceLocation(potionId));
             for (MobEffectInstance effect : potion.getEffects()) {
             	sendEntity.addEffect(effect);
             	effect.getEffect().getDisplayName();

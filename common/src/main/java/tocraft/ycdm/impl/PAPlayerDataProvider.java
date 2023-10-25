@@ -6,8 +6,8 @@ import net.minecraft.core.BlockPos;
 
 public interface PAPlayerDataProvider {
 	
-	void setPotion(Integer potion);
-	Integer getPotion();
+	void setPotion(String potion);
+	String getPotion();
 	void setStructures(List<BlockPos> structures);
 	List<BlockPos> getStructures();
 }
