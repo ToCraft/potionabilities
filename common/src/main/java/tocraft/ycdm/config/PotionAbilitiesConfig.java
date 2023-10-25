@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import tocraft.craftedcore.config.Config;
+import tocraft.craftedcore.config.annotions.Synchronize;
 
 public class PotionAbilitiesConfig implements Config {
 	@SuppressWarnings("serial")
@@ -13,4 +14,6 @@ public class PotionAbilitiesConfig implements Config {
 		}
 	};
 	public int maxDistanceToStructure = 50;
+	@Synchronize
+	public int cooldownTicks = 1200;
 }
