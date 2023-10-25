@@ -27,8 +27,9 @@ public class NetworkHandler {
 			String potionId = ((PAPlayerDataProvider)context.getPlayer()).getPotion();
 			Potion potion = BuiltInRegistries.POTION.get(new ResourceLocation(potionId));
             for (MobEffectInstance effect : potion.getEffects()) {
-            	sendEntity.addEffect(effect);
-            	effect.getEffect().getDisplayName();
+            	// otherwise /effect clear would cause troubles
+            	MobEffectInstance effectInstance = new MobEffectInstance(effect.getEffect(), effect.getDuration(), effect.getAmplifier());
+            	sendEntity.addEffect(effectInstance);
             }
 		});
 	}
