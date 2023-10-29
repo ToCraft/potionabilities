@@ -9,6 +9,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.alchemy.Potion;
@@ -35,6 +36,8 @@ public class NetworkHandler {
 	            	MobEffectInstance effectInstance = new MobEffectInstance(effect.getEffect(), effect.getDuration(), effect.getAmplifier());
 	            	sendEntity.addEffect(effectInstance);
 	            }
+	            
+	            sendEntity.playSound(SoundEvents.SPLASH_POTION_THROW);
 	            
 	            ((PAPlayerDataProvider) context.getPlayer()).setCooldown(PotionAbilities.CONFIG.cooldownTicks);
 			}

@@ -21,6 +21,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -96,6 +97,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     				
     				serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
     				serverPlayer.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 10, false, false));
+    				
+    				serverPlayer.playSound(SoundEvents.GENERIC_DRINK);
     			}
         		
         		// Re-assign values to ensure it works next time
