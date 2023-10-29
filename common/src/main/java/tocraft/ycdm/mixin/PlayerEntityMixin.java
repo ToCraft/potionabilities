@@ -30,6 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import tocraft.ycdm.PotionAbilities;
+import tocraft.ycdm.events.PotionAbilityEvents;
 import tocraft.ycdm.impl.PAPlayerDataProvider;
 import tocraft.ycdm.network.NetworkHandler;
 
@@ -72,9 +73,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     	    		}
     				// ignore crashes to save time (otherwise it would need to check EVERY var from the code above if it's null.
     	    		catch (Exception ignored) {
-    	    			// Re-assign values to ensure it works next time
-    	    			nearest = null;
-    	    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
+    	    			reassignValues();
     	    		}; 			
         		});
 
@@ -82,11 +81,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
         			// check if structure was already visited
         			for (BlockPos entry : structures) {
         				if (entry.getX() == nearest.getX() && entry.getZ() == nearest.getZ()) {
-        					// Re-assign values to ensure it works next time
-        					nearest = null;
-        					distance = PotionAbilities.CONFIG.maxDistanceToStructure;
+        					reassignValues();
         					return;
         				}
+        			}
+        			
+        			if (PotionAbilityEvents.UNLOCK_POTION.invoker().unlock(serverPlayer).isFalse()) {
+        				reassignValues();
+            			return;
         			}
         			
     				Random random = new Random();
@@ -100,10 +102,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     				
     				serverPlayer.playSound(SoundEvents.GENERIC_DRINK);
     			}
-        		
-        		// Re-assign values to ensure it works next time
-    			nearest = null;
-    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
+        		reassignValues();
     		}
     		
     		NetworkHandler.syncData(serverPlayer);
@@ -153,6 +152,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
 				}
 			});
 		}
+	}
+	
+	private void reassignValues() {
+		// Re-assign values to ensure everything works next time
+		nearest = null;
+		distance = PotionAbilities.CONFIG.maxDistanceToStructure;
 	}
 	
 	@Unique
