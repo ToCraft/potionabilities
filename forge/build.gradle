@@ -87,7 +87,7 @@ task curseforge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     apiToken = System.getenv("CURSEFORGE_TOKEN")
     
     // The main file to upload
-    def mainFile = upload(0, remapJar)
+    def mainFile = upload(927399, remapJar)
     mainFile.displayName = rootProject.minecraft_version + "-" + project.name + "-" + rootProject.mod_version
     mainFile.releaseType = 'release'
     mainFile.addModLoader(project.name)
