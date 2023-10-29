@@ -10,4 +10,6 @@ public interface PAPlayerDataProvider {
 	String getPotion();
 	void setStructures(List<BlockPos> structures);
 	List<BlockPos> getStructures();
+	void setCooldown(int cooldown);
+	int getCooldown();
 }

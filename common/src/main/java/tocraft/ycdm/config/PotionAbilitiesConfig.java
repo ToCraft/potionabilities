@@ -15,5 +15,5 @@ public class PotionAbilitiesConfig implements Config {
 	};
 	public int maxDistanceToStructure = 50;
 	@Synchronize
-	public int cooldownTicks = 1200;
+	public int cooldownTicks = 600;
 }

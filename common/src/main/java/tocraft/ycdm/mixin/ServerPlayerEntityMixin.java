@@ -19,5 +19,6 @@ public class ServerPlayerEntityMixin {
         // Transfer data from the old ServerPlayer -> new ServerPlayer
         newData.setPotion(oldData.getPotion());
         newData.setStructures(oldData.getStructures());
+        newData.setCooldown(oldData.getCooldown());
     }
 }
