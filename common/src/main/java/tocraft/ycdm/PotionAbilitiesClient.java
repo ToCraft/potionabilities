@@ -18,8 +18,7 @@ public class PotionAbilitiesClient {
 	public void initialize() {
 		AbilityOverlayRenderer.register();
 		
-		if (!PotionAbilities.foundWalkers)
-			KeyMappingRegistry.register(ABILITY_KEY);
+		KeyMappingRegistry.register(ABILITY_KEY);
 		
 		// Register event handlers
 		ClientTickEvents.CLIENT_PRE.register(new KeyPressHandler());
