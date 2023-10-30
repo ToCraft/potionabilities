@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -26,7 +25,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import tocraft.ycdm.PotionAbilities;
 import tocraft.ycdm.events.PotionAbilityEvents;
 import tocraft.ycdm.impl.PAPlayerDataProvider;
@@ -53,17 +52,16 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     private void serverTick(CallbackInfo info) {
     	// check if player is near temple and in liquid.
     	if ((Object) this instanceof ServerPlayer serverPlayer) {
-    		if (serverPlayer.isInWaterOrBubble() && PotionAbilities.shapeConditions(serverPlayer)) {
-    			ServerLevel serverLevel = serverPlayer.getLevel();
-        		Registry<ConfiguredStructureFeature<?, ?>> registry = serverLevel.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
+    		if (serverPlayer.isInWaterOrBubble() || serverPlayer.isInLava() && PotionAbilities.shapeConditions(serverPlayer)) {
+            	ServerLevel serverLevel = serverPlayer.getLevel();
+        		Registry<StructureFeature<?>> registry = serverLevel.registryAccess().registryOrThrow(Registry.STRUCTURE_FEATURE_REGISTRY);
         		
         		// get each structure from config
         		PotionAbilities.CONFIG.structures.forEach(entry -> {
         			try {
-        				ConfiguredStructureFeature<?, ?> structure = registry.get(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(entry)));
-                		HolderSet<ConfiguredStructureFeature<?, ?>> holderSet = PotionAbilities.getHolders(structure, registry).orElseThrow();
-                		BlockPos newNearest = serverLevel.getChunkSource().getGenerator().findNearestMapFeature(serverLevel, holderSet, serverPlayer.blockPosition(), PotionAbilities.CONFIG.maxDistanceToStructure, false).getFirst();
-            			int newDistance = serverPlayer.blockPosition().distManhattan(new BlockPos(newNearest.getX(), serverPlayer.getBlockY(), newNearest.getZ()));
+        				StructureFeature<?> structure = registry.get(ResourceKey.create(Registry.STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(entry)));
+                		BlockPos newNearest = serverLevel.getChunkSource().getGenerator().findNearestMapFeature(serverLevel, structure, serverPlayer.blockPosition(), PotionAbilities.CONFIG.maxDistanceToStructure, false);
+            			int newDistance = serverPlayer.blockPosition().distManhattan(new BlockPos(newNearest.getX(), serverPlayer.blockPosition().getY(), newNearest.getZ()));
                 		if (newDistance <= distance) {
                 			distance = newDistance;
                 			nearest = newNearest;
@@ -71,6 +69,9 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     	    		}
     				// ignore crashes to save time (otherwise it would need to check EVERY var from the code above if it's null.
     	    		catch (Exception ignored) {
+    	    			// Re-assign values to ensure it works next time
+    	    			nearest = null;
+    	    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
     	    			// Re-assign values to ensure it works next time
     	    			nearest = null;
     	    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
@@ -92,7 +93,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
             			}
             			
         				Random random = new Random();
-        				int potionId = random.nextInt(0, Registry.POTION.size());
+        				int potionId = random.nextInt(0, Registry.POTION.keySet().size());
         				ResourceLocation potionName = Registry.POTION.getKey(Registry.POTION.byId(potionId));
         				potion = potionName.getNamespace() + ":" + potionName.getPath();
         				structures.add(nearest);
