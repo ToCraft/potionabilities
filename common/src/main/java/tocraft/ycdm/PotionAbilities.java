@@ -25,7 +25,7 @@ public class PotionAbilities {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(PotionAbilities.class);
 	public static final String MODID = "ycdm";
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/1.20.1/gradle.properties";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/1.19.4/gradle.properties";
 	public static final PotionAbilitiesConfig CONFIG = ConfigLoader.read(MODID, PotionAbilitiesConfig.class);
 	public static boolean foundWalkers = false;
 	public static List<String> devs = new ArrayList<>();

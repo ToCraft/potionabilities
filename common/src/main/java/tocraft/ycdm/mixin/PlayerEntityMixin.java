@@ -56,7 +56,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     	// check if player is near temple and in liquid.
     	if ((Object) this instanceof ServerPlayer serverPlayer) {
     		if (serverPlayer.isInWaterOrBubble() && PotionAbilities.shapeConditions(serverPlayer)) {
-    			ServerLevel serverLevel = serverPlayer.serverLevel();
+    			ServerLevel serverLevel = serverPlayer.getLevel();
         		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
         		
         		// get each structure from config
@@ -73,40 +73,42 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     	    		}
     				// ignore crashes to save time (otherwise it would need to check EVERY var from the code above if it's null.
     	    		catch (Exception ignored) {
-    	    			reassignValues();
+    	    			// Re-assign values to ensure it works next time
+    	    			nearest = null;
+    	    			distance = PotionAbilities.CONFIG.maxDistanceToStructure;
     	    		}; 			
         		});
 
-        		if (nearest != null) {
-        			// check if structure was already visited
-        			for (BlockPos entry : structures) {
-        				if (entry.getX() == nearest.getX() && entry.getZ() == nearest.getZ()) {
-        					reassignValues();
-        					return;
-        				}
+            		if (nearest != null) {
+            			// check if structure was already visited
+            			for (BlockPos entry : structures) {
+            				if (entry.getX() == nearest.getX() && entry.getZ() == nearest.getZ()) {
+            					reassignValues();
+            					return;
+            				}
+            			}
+            			
+            			if (PotionAbilityEvents.UNLOCK_POTION.invoker().unlock(serverPlayer).isFalse()) {
+            				reassignValues();
+                			return;
+            			}
+            			
+        				Random random = new Random();
+        				int potionId = random.nextInt(0, BuiltInRegistries.POTION.size());
+        				ResourceLocation potionName = BuiltInRegistries.POTION.getKey(BuiltInRegistries.POTION.byId(potionId));
+        				potion = potionName.getNamespace() + ":" + potionName.getPath();
+        				structures.add(nearest);
+        				
+        				serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
+        				serverPlayer.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 10, false, false));
+        				
+        				serverPlayer.playSound(SoundEvents.GENERIC_DRINK);
         			}
-        			
-        			if (PotionAbilityEvents.UNLOCK_POTION.invoker().unlock(serverPlayer).isFalse()) {
-        				reassignValues();
-            			return;
-        			}
-        			
-    				Random random = new Random();
-    				int potionId = random.nextInt(0, BuiltInRegistries.POTION.size());
-    				ResourceLocation potionName = BuiltInRegistries.POTION.getKey(BuiltInRegistries.POTION.byId(potionId));
-    				potion = potionName.getNamespace() + ":" + potionName.getPath();
-    				structures.add(nearest);
-    				
-    				serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
-    				serverPlayer.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 10, false, false));
-    				
-    				serverPlayer.playSound(SoundEvents.GENERIC_DRINK);
-    			}
-        		reassignValues();
-    		}
-    		
-    		NetworkHandler.syncData(serverPlayer);
-        	this.setCooldown(Math.max(0, this.getCooldown() - 1));
+            		reassignValues();
+        		}
+        		
+        		NetworkHandler.syncData(serverPlayer);
+            	this.setCooldown(Math.max(0, this.getCooldown() - 1));    		
     	}
     }
 

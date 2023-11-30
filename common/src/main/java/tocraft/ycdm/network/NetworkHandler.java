@@ -27,7 +27,7 @@ public class NetworkHandler {
 				if (!PotionAbilities.shapeConditions(context.getPlayer()))
 					return;
 				UUID entityUUID = buf.readUUID();
-				LivingEntity sendEntity = (LivingEntity) ((ServerPlayer)context.getPlayer()).serverLevel().getEntity(entityUUID);
+				LivingEntity sendEntity = (LivingEntity) ((ServerPlayer)context.getPlayer()).getLevel().getEntity(entityUUID);
 				
 				String potionId = ((PAPlayerDataProvider)context.getPlayer()).getPotion();
 				Potion potion = BuiltInRegistries.POTION.get(new ResourceLocation(potionId));
