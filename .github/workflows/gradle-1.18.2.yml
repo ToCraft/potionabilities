@@ -5,23 +5,13 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-<<<<<<<< HEAD:.github/workflows/gradle-1.20.1.yml
-name: Build-1.20.1
+name: Build-1.18.2
 
 on:
   push:
-    branches: [ "1.20.1" ]
+    branches: [ "1.18.2" ]
   pull_request:
-    branches: [ "1.20.1" ]
-========
-name: Build-1.19.4
-
-on:
-  push:
-    branches: [ "1.19.4" ]
-  pull_request:
-    branches: [ "1.19.4" ]
->>>>>>>> dad9f60 (backport to 1.19.4):.github/workflows/gradle-1.19.4.yml
+    branches: [ "1.18.2" ]
 
 permissions:
   contents: read

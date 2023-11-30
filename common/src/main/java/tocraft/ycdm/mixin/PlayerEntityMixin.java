@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceKey;
@@ -28,7 +26,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import tocraft.ycdm.PotionAbilities;
 import tocraft.ycdm.events.PotionAbilityEvents;
 import tocraft.ycdm.impl.PAPlayerDataProvider;
@@ -57,14 +55,14 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     	if ((Object) this instanceof ServerPlayer serverPlayer) {
     		if (serverPlayer.isInWaterOrBubble() && PotionAbilities.shapeConditions(serverPlayer)) {
     			ServerLevel serverLevel = serverPlayer.getLevel();
-        		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
+        		Registry<ConfiguredStructureFeature<?, ?>> registry = serverLevel.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY);
         		
         		// get each structure from config
         		PotionAbilities.CONFIG.structures.forEach(entry -> {
         			try {
-        				Structure structure = registry.get(ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(entry)));
-                		HolderSet<Structure> holderSet = PotionAbilities.getHolders(structure, registry).orElseThrow();
-                		BlockPos newNearest = serverLevel.getChunkSource().getGenerator().findNearestMapStructure(serverLevel, holderSet, serverPlayer.blockPosition(), PotionAbilities.CONFIG.maxDistanceToStructure, false).getFirst();
+        				ConfiguredStructureFeature<?, ?> structure = registry.get(ResourceKey.create(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY, new ResourceLocation(entry)));
+                		HolderSet<ConfiguredStructureFeature<?, ?>> holderSet = PotionAbilities.getHolders(structure, registry).orElseThrow();
+                		BlockPos newNearest = serverLevel.getChunkSource().getGenerator().findNearestMapFeature(serverLevel, holderSet, serverPlayer.blockPosition(), PotionAbilities.CONFIG.maxDistanceToStructure, false).getFirst();
             			int newDistance = serverPlayer.blockPosition().distManhattan(new BlockPos(newNearest.getX(), serverPlayer.getBlockY(), newNearest.getZ()));
                 		if (newDistance <= distance) {
                 			distance = newDistance;
@@ -94,15 +92,15 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
             			}
             			
         				Random random = new Random();
-        				int potionId = random.nextInt(0, BuiltInRegistries.POTION.size());
-        				ResourceLocation potionName = BuiltInRegistries.POTION.getKey(BuiltInRegistries.POTION.byId(potionId));
+        				int potionId = random.nextInt(0, Registry.POTION.size());
+        				ResourceLocation potionName = Registry.POTION.getKey(Registry.POTION.byId(potionId));
         				potion = potionName.getNamespace() + ":" + potionName.getPath();
         				structures.add(nearest);
         				
         				serverPlayer.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 60, 0, false, false));
         				serverPlayer.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 10, false, false));
         				
-        				serverPlayer.playSound(SoundEvents.GENERIC_DRINK);
+        				serverPlayer.playSound(SoundEvents.GENERIC_DRINK, 1.0f, 1.0f);
         			}
             		reassignValues();
         		}

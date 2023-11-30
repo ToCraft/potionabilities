@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.config.ConfigLoader;
@@ -25,7 +25,7 @@ public class PotionAbilities {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(PotionAbilities.class);
 	public static final String MODID = "ycdm";
-	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/1.19.4/gradle.properties";
+	public static String versionURL = "https://raw.githubusercontent.com/ToCraft/potionabilities/1.18.2/gradle.properties";
 	public static final PotionAbilitiesConfig CONFIG = ConfigLoader.read(MODID, PotionAbilitiesConfig.class);
 	public static boolean foundWalkers = false;
 	public static List<String> devs = new ArrayList<>();
@@ -42,7 +42,7 @@ public class PotionAbilities {
 		PlayerEvents.PLAYER_JOIN.register(player -> {
 			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
 			if (newestVersion != null && !Platform.getMod(MODID).getVersion().equals(newestVersion))
-				player.sendSystemMessage(Component.translatable("ycdm.update", newestVersion));
+				player.displayClientMessage(new TranslatableComponent("ycdm.update", newestVersion), false);
 		});
 			
 		

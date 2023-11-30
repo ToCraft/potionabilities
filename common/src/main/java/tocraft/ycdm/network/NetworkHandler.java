@@ -3,7 +3,7 @@ package tocraft.ycdm.network;
 import java.util.UUID;
 
 import io.netty.buffer.Unpooled;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -30,14 +30,14 @@ public class NetworkHandler {
 				LivingEntity sendEntity = (LivingEntity) ((ServerPlayer)context.getPlayer()).getLevel().getEntity(entityUUID);
 				
 				String potionId = ((PAPlayerDataProvider)context.getPlayer()).getPotion();
-				Potion potion = BuiltInRegistries.POTION.get(new ResourceLocation(potionId));
+				Potion potion = Registry.POTION.get(new ResourceLocation(potionId));
 	            for (MobEffectInstance effect : potion.getEffects()) {
 	            	// otherwise /effect clear would cause troubles
 	            	MobEffectInstance effectInstance = new MobEffectInstance(effect.getEffect(), effect.getDuration(), effect.getAmplifier());
 	            	sendEntity.addEffect(effectInstance);
 	            }
 	            
-	            sendEntity.playSound(SoundEvents.SPLASH_POTION_THROW);
+	            sendEntity.playSound(SoundEvents.SPLASH_POTION_THROW, 1.0f, 1.0f);
 	            
 	            ((PAPlayerDataProvider) context.getPlayer()).setCooldown(PotionAbilities.CONFIG.cooldownTicks);
 			}
