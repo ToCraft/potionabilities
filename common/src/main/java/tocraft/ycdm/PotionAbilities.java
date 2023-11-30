@@ -69,7 +69,7 @@ public class PotionAbilities {
      */
     public static boolean shapeConditions(Player player) {
     	if (foundWalkers)
-    		return ((PlayerDataProvider) player).walkers$get2ndShape() != null && ((PlayerDataProvider) player).walkers$getCurrentShape() == null;
+    		return ((PlayerDataProvider) player).walkers$get2ndShape() != null && ((PlayerDataProvider) player).walkers$getCurrentShape() == null && ((PlayerDataProvider) player).walkers$getAbilityCooldown() <= 0;
     	return true;
     };
 }
