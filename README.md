@@ -37,7 +37,7 @@ On the left-down corner, you'll see a potion. Once it disappeared, you can re-us
 
 ### Changes if the woodwalkers-mod is installed
 
-If my [woodwalkers-mod](https://www.curseforge.com/minecraft/mc-mods/woodwalkers) is found, you're only able to unlock a potion-ability, if you're shaped as a normal player but still enabled an entity as second Shape, that also applies for using potion-abilities.
+If my [woodwalkers-mod](https://www.curseforge.com/minecraft/mc-mods/woodwalkers) is found, you're only able to unlock a potion-ability, if you're shaped as a normal player but still enabled an entity as second Shape, that also applies for using potion-abilities. Furthermore, If you're shape-ability is on cooldown, you can't use your potion-ability and vice versa.
 
 ## License
 
