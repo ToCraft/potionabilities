@@ -14,6 +14,10 @@ public class ClientNetworking {
 		NetworkManager.registerReceiver(NetworkManager.Side.S2C, NetworkHandler.SYNC_DATA, (packet, context) -> {
 			assert context.getPlayer() != null;
 			
+			// prevent crashes
+			if (!(context.getPlayer() instanceof PAPlayerDataProvider))
+				return;
+			
 			CompoundTag tag = packet.readNbt();
 			PAPlayerDataProvider playerDataProvider = (PAPlayerDataProvider) context.getPlayer();
 			playerDataProvider.setCooldown(tag.getInt("cooldown"));
