@@ -1,9 +1,8 @@
 {
-	"key.categories.ycdm": "Zauber-Fähigkeiten",
-	"key.ycdm_ability": "Zauber-Fähigkeit",
+	"key.categories.ycdm": "Zaubertrank-Fähigkeiten",
+	"key.ycdm_ability": "Zaubertrank-Fähigkeit",
 	"ycdm.structure_clear": "%s hat die besuchten Strukturen wieder vergessen.",
 	"ycdm.potion_clear": "%s verlernte eine magische Fähigkeit.",
 	"ycdm.potion_get_success": "%s lernte die magische Fähigkeit %s.",
-	"ycdm.potion_get_failed": "%s hat keine magische Fähigkeit.",
-	"ycdm.update": "Eine neue Version von Potion-Abilities ist verfügbar: %s"
+	"ycdm.potion_get_failed": "%s hat keine magische Fähigkeit."
 }

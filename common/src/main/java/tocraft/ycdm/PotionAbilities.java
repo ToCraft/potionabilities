@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import tocraft.craftedcore.config.ConfigLoader;
-import tocraft.craftedcore.events.common.PlayerEvents;
 import tocraft.craftedcore.platform.Platform;
 import tocraft.craftedcore.platform.VersionChecker;
 import tocraft.walkers.impl.PlayerDataProvider;
@@ -39,12 +38,7 @@ public class PotionAbilities {
 				foundWalkers = true;
 		});
 		
-		PlayerEvents.PLAYER_JOIN.register(player -> {
-			String newestVersion = VersionChecker.checkForNewVersion(versionURL);
-			if (newestVersion != null && !Platform.getMod(MODID).getVersion().equals(newestVersion))
-				player.sendSystemMessage(Component.translatable("ycdm.update", newestVersion));
-		});
-			
+		VersionChecker.registerChecker(MODID, versionURL, Component.translatable("key.categories.ycdm"));
 		
 		if (Platform.getDist().isClient())
 			new PotionAbilitiesClient().initialize();

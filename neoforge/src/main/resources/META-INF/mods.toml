@@ -3,6 +3,9 @@ loaderVersion = "[48,)"
 #issueTrackerURL = ""
 license = "MIT"
 
+[[mixins]]
+config = "ycdm.mixins.json"
+
 [[mods]]
 modId = "ycdm"
 version = "${version}"
