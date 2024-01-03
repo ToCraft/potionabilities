@@ -1,8 +1,13 @@
 {
 	"key.categories.ycdm": "Potion Abilities",
 	"key.ycdm_ability": "Potion Ability",
-	"ycdm.structure_clear": "%s forgot the visited structures.",
+	"ycdm.structures_clear": "%s forgot the visited structures.",
+	"ycdm.structures_get": "%s remembers the following structures:",
+	"ycdm.structure_remove_success": "%s forgot the structure at %s %s.",
+	"ycdm.structure_remove_failure": "%s couldn't the structure at %s %s.",
+	"ycdm.structure_add": "%s remembers now the structure at %s %s.",
 	"ycdm.potion_clear": "%s lost a potion ability.",
 	"ycdm.potion_get_success": "%s learned the potion ability %s.",
-	"ycdm.potion_get_failed": "%s doesn't have a potion ability unlocked."
+	"ycdm.potion_get_failed": "%s doesn't have a potion ability unlocked.",
+	"ycdm.potion_set": "%s unlocked %s."
 }
