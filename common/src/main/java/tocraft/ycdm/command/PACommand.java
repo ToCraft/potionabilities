@@ -1,26 +1,24 @@
 package tocraft.ycdm.command;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
-
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.alchemy.Potion;
 import tocraft.craftedcore.events.common.CommandEvents;
-import tocraft.ycdm.PotionAbilities;
 import tocraft.ycdm.impl.PAPlayerDataProvider;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class PACommand {
 	public void initialize() {
@@ -80,16 +78,22 @@ public class PACommand {
 	};
 
 	public static void getStructures(CommandSourceStack source, ServerPlayer player) {
-		source.sendSystemMessage(Component.translatable("ycdm.structures_get", player.getDisplayName()));
+		if (((PAPlayerDataProvider) player).getStructures().isEmpty()) {
+			source.sendSystemMessage(Component.translatable("ycdm.structures_get_failure", player.getDisplayName()));
+			return;
+		}
+
+		source.sendSystemMessage(Component.translatable("ycdm.structures_get_success", player.getDisplayName()));
 
 		for (BlockPos structure : ((PAPlayerDataProvider) player).getStructures()) {
-			source.sendSystemMessage(Component.literal("X: " + structure.getX() + " Z: " + structure.getZ()));
+			source.sendSystemMessage(Component.translatable("ycdm.structures_get", blockPosToComponent(structure)));
 		}
 	};
 
 	public static void addStructure(CommandSourceStack source, ServerPlayer player, BlockPos position) {
 		((PAPlayerDataProvider) player).getStructures().add(position);
-		source.sendSystemMessage(Component.translatable("ycdm.structure_add", player.getDisplayName(), position.getX(), position.getZ()));
+
+		source.sendSystemMessage(Component.translatable("ycdm.structure_add", player.getDisplayName(), blockPosToComponent(position)));
 	};
 
 	public static void removeStructure(CommandSourceStack source, ServerPlayer player, BlockPos position) {
@@ -102,10 +106,12 @@ public class PACommand {
 			}
 		};
 
-		if (success )
-			source.sendSystemMessage(Component.translatable("ycdm.structure_remove_success", player.getDisplayName(), position.getX(), position.getZ()));
+		Component positionComponent = blockPosToComponent(position);
+
+		if (success)
+			source.sendSystemMessage(Component.translatable("ycdm.structure_remove_success", player.getDisplayName(), positionComponent));
 		else
-			source.sendSystemMessage(Component.translatable("ycdm.structure_remove_failure", player.getDisplayName(), position.getX(), position.getZ()));
+			source.sendSystemMessage(Component.translatable("ycdm.structure_remove_failure", player.getDisplayName(), positionComponent));
 	};
 	
 	public static void clearPotion(CommandSourceStack source, ServerPlayer player) {
@@ -127,4 +133,10 @@ public class PACommand {
 		((PAPlayerDataProvider) player).setPotion(potionId.getNamespace() + ":" + potionId.getPath());
 		source.sendSystemMessage(Component.translatable("ycdm.potion_set", player.getDisplayName(), potionId.getNamespace() + ":" + potionId.getPath()));
 	};
+
+	private static Component blockPosToComponent(BlockPos blockPos) {
+		return ComponentUtils.wrapInSquareBrackets(Component.translatable("chat.coordinates", blockPos.getX(), "~", blockPos.getZ())).withStyle((style) -> {
+			return style.withColor(ChatFormatting.GREEN).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/tp @s " + blockPos.getX() + " ~ " + blockPos.getZ())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.coordinates.tooltip")));
+		});
+	}
 }
