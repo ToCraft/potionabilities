@@ -55,7 +55,7 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PAPlayer
     private void serverTick(CallbackInfo info) {
     	// check if player is near temple and in liquid.
     	if ((Object) this instanceof ServerPlayer serverPlayer) {
-    		if (serverPlayer.isInLiquid() && PotionAbilities.shapeConditions(serverPlayer)) {
+    		if (serverPlayer.isInWaterOrBubble() && PotionAbilities.shapeConditions(serverPlayer)) {
     			ServerLevel serverLevel = serverPlayer.serverLevel();
         		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
         		
