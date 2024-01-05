@@ -3,6 +3,8 @@
 ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fycdm%2Fmaven-metadata.xml&versionPrefix=1.20.2-forge&label=PotionAbilities)
 ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Ftocraft.ddns.net%2Fmaven%2Freleases%2Fdev%2Ftocraft%2Fycdm%2Fmaven-metadata.xml&versionPrefix=1.20.2-fabric&label=PotionAbilities)
 
+# I'm sorry to say that 1.16.5 will not be supported anymore since it's way to old and too many bugs occure because of that. I'll still accept PRs, nevertheless.
+
 # PotionAbilities
 
 *PotionAbilities* is a very basic magic mod, which tries to integrate into vanilla and therefore uses vanilla-potion-effects as magical abilities.
