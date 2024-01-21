@@ -6,7 +6,7 @@ import tocraft.ycdm.PotionAbilities;
 @Mod(PotionAbilities.MODID)
 public class PotionAbilitiesForge {
 
-	public PotionAbilitiesForge() {
-		new PotionAbilities().initialize();
-	}
+    public PotionAbilitiesForge() {
+        new PotionAbilities().initialize();
+    }
 }

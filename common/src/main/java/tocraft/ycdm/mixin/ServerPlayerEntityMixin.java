@@ -1,11 +1,10 @@
 package tocraft.ycdm.mixin;
 
+import net.minecraft.server.level.ServerPlayer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import net.minecraft.server.level.ServerPlayer;
 import tocraft.ycdm.impl.PAPlayerDataProvider;
 
 @Mixin(ServerPlayer.class)
@@ -17,8 +16,8 @@ public class ServerPlayerEntityMixin {
         PAPlayerDataProvider newData = ((PAPlayerDataProvider) this);
 
         // Transfer data from the old ServerPlayer -> new ServerPlayer
-        newData.setPotion(oldData.getPotion());
-        newData.setStructures(oldData.getStructures());
-        newData.setCooldown(oldData.getCooldown());
+        newData.ycdm$setPotion(oldData.ycdm$getPotion());
+        newData.ycdm$setStructures(oldData.ycdm$getStructures());
+        newData.ycdm$setCooldown(oldData.ycdm$getCooldown());
     }
 }
