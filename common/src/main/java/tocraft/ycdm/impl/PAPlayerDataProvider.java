@@ -1,15 +1,20 @@
 package tocraft.ycdm.impl;
 
-import java.util.List;
-
 import net.minecraft.core.BlockPos;
 
+import java.util.List;
+
 public interface PAPlayerDataProvider {
-	
-	void setPotion(String potion);
-	String getPotion();
-	void setStructures(List<BlockPos> structures);
-	List<BlockPos> getStructures();
-	void setCooldown(int cooldown);
-	int getCooldown();
+
+    void ycdm$setPotion(String potion);
+
+    String ycdm$getPotion();
+
+    void ycdm$setStructures(List<BlockPos> structures);
+
+    List<BlockPos> ycdm$getStructures();
+
+    void ycdm$setCooldown(int cooldown);
+
+    int ycdm$getCooldown();
 }
