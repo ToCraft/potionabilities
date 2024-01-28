@@ -1,7 +1,7 @@
 modLoader = "javafml"
-loaderVersion = "[48,)"
+loaderVersion = "[2,)"
 #issueTrackerURL = ""
-license = "MIT"
+license = "LGPL-3.0"
 
 [[mixins]]
 config = "ycdm.mixins.json"
@@ -15,13 +15,6 @@ description = '''
 You can do Magic!
 '''
 #logoFile = ""
-
-[[dependencies.ycdm]]
-modId = "forge"
-mandatory = true
-versionRange = "[48,)"
-ordering = "NONE"
-side = "BOTH"
 
 [[dependencies.ycdm]]
 modId = "minecraft"
