@@ -20,6 +20,7 @@ configurations {
 dependencies {
     neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
     modApi "dev.tocraft:craftedcore-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
+    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
     modApi "dev.tocraft:walkers-neoforge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -27,10 +28,16 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
+    Map<String, ?> replaceProperties = [
+            minecraft_version: minecraft_version, version: version,
+            architectury_version: architectury_version,
+            craftedcore_version: craftedcore_version,
+    ]
+
+    inputs.properties replaceProperties
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand replaceProperties + [project: project]
     }
 }
 

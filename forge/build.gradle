@@ -25,6 +25,7 @@ configurations {
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.minecraft_version}-${rootProject.forge_version}"
     modApi "dev.tocraft:craftedcore-forge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
+    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
     modApi "dev.tocraft:walkers-forge:${rootProject.minecraft_version}-${rootProject.craftedcore_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive = false }
@@ -32,10 +33,16 @@ dependencies {
 }
 
 processResources {
-    inputs.property "version", project.version.toString()
+    Map<String, ?> replaceProperties = [
+            minecraft_version: minecraft_version, version: version,
+            architectury_version: architectury_version,
+            craftedcore_version: craftedcore_version,
+    ]
+
+    inputs.properties replaceProperties
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version.toString()
+        expand replaceProperties + [project: project]
     }
 }
 
