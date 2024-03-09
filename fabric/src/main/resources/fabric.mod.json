@@ -9,7 +9,7 @@
   ],
   "contributors": [
   ],
-  "license": "",
+  "license": "LGPL-3.0",
   "icon": "",
   "environment": "*",
   "entrypoints": {
@@ -23,9 +23,11 @@
     "ycdm.mixins.json"
   ],
   "depends": {
+    "minecraft": ">=${minecraft_version}",
     "fabricloader": ">=0.8.7+build.201",
     "fabric": "*",
     "fabric-api": "*",
-    "craftedcore": "*"
+    "craftedcore": ">=${craftedcore_version}",
+    "architectury": ">=${architectury_version}"
   }
 }
