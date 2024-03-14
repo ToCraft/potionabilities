@@ -1,9 +1,14 @@
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
-    id "me.shedaniel.unified-publishing"
 }
 
 apply from: "https://raw.githubusercontent.com/ToCraft/GradleMaster/main/forge.gradle"
+
+loom {
+    forge {
+        mixinConfigs = ["ycdm.mixins.json"]
+    }
+}
 
 dependencies {
     modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
